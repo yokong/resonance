@@ -1,0 +1,9 @@
+procs:
+  # convex:
+  #   cmd: ['pnpx', 'convex', 'dev']
+  # next:
+  #   cmd: ['pnpm', 'dlx', 'inngest-cli@latest', 'dev']
+  server:
+    cmd: ['pnpm', 'run', 'dev']
+  prisma:
+    cmd: ['pnpx',  'prisma', 'studio']

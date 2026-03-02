@@ -1,0 +1,16 @@
+{
+  "prettier.enable": true,
+  "editor.formatOnSave": true,
+  // 对于 TypeScript 项目
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  
+  // 对于 JavaScript 项目
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "@base-ui/*"
+  ],
+  "javascript.preferences.autoImportFileExcludePatterns": [
+    "@base-ui/*"
+  ]
+}
