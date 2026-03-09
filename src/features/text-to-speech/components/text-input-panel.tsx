@@ -1,20 +1,28 @@
 "use client";
+
+import { Coins } from "lucide-react";
+import { useStore } from "@tanstack/react-form";
+
+import { SettingsDrawer } from "./settings-drawer";
+import { HistoryDrawer } from "./history-drawer";
+import { VoiceSelectorButton } from "./voice-selector-button";
+
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { GenerateButton } from "@/features/text-to-speech/components/generate-button";
-import { ttsFormOptions } from "@/features/text-to-speech/components/text-to-speech-form";
+import { useTypedAppFormContext } from "@/hooks/use-app-form";
+
 import {
   COST_PER_UNIT,
   TEXT_MAX_LENGTH,
 } from "@/features/text-to-speech/data/constants";
-import { useTypedAppFormContext } from "@/hooks/use-app-form";
-import { useStore } from "@tanstack/react-form";
-import { Coins } from "lucide-react";
-import { useState } from "react";
+import { ttsFormOptions } from "./text-to-speech-form";
+import { GenerateButton } from "./generate-button";
+import { PromptSuggestions } from "@/features/text-to-speech/components/prompt-suggestions";
+// import { PromptSuggestions } from "./prompt-suggestions";
 
 export function TextInputPanel() {
   const form = useTypedAppFormContext(ttsFormOptions);
+
   const text = useStore(form.store, (s) => s.values.text);
   const isSubmitting = useStore(form.store, (s) => s.isSubmitting);
   const isValid = useStore(form.store, (s) => s.isValid);
@@ -35,31 +43,36 @@ export function TextInputPanel() {
             />
           )}
         </form.Field>
-        {/* bottom overlay */}
+        {/* Bottom fade overlay */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-background to-transparent" />
       </div>
       {/* Action bar */}
       <div className="shrink-0 p-4 lg:p-6">
         {/* Mobile layout */}
         <div className="flex flex-col gap-3 lg:hidden">
+          <div className="flex items-center gap-2">
+            <SettingsDrawer>
+              <VoiceSelectorButton />
+            </SettingsDrawer>
+            <HistoryDrawer />
+          </div>
           <GenerateButton
             className="w-full"
-            disabled={isSubmitting || !isValid}
+            disabled={isSubmitting}
             isSubmitting={isSubmitting}
             onSubmit={() => form.handleSubmit()}
           />
         </div>
-        {/* desktop layout */}
+        {/* Desktop layout */}
         {text.length > 0 ? (
           <div className="hidden items-center justify-between lg:flex">
-            <Badge variant={"outline"}>
+            <Badge variant="outline" className="gap-1.5 border-dashed">
               <Coins className="size-3 text-chart-5" />
               <span className="text-xs">
-                {/*? 数字变成“等宽”显示，即使你使用的不是等宽字体 */}
                 <span className="tabular-nums">
                   ${(text.length * COST_PER_UNIT).toFixed(4)}
                 </span>
-                &nbsp;estimated
+                &nbsp; estimated
               </span>
             </Badge>
             <div className="flex items-center gap-3">
@@ -79,9 +92,9 @@ export function TextInputPanel() {
           </div>
         ) : (
           <div className="hidden lg:block">
-            <p className="text-sm text-muted-foreground">
-              Get started by typing or pasting text above
-            </p>
+            <PromptSuggestions
+              onSelect={(prompt) => form.setFieldValue("text", prompt)}
+            />
           </div>
         )}
       </div>
